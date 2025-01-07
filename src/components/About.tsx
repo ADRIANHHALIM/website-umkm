@@ -12,7 +12,7 @@ const About = () => {
                 Sejarah Kami
               </h3>
               <p className="text-secondary">
-                Didirikan pada tahun 2020, kami telah berkomitmen untuk memberikan
+                Didirikan pada tahun 2024, kami telah berkomitmen untuk memberikan
                 produk terbaik kepada pelanggan kami. Dengan pengalaman dan
                 dedikasi tim kami, kami terus berinovasi dan berkembang.
               </p>
