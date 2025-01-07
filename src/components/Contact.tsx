@@ -1,8 +1,18 @@
 import { Mail, MapPin, Phone } from 'lucide-react';
+import { useState } from 'react';
+import { useToast } from "@/components/ui/use-toast";
 
 const Contact = () => {
+  const { toast } = useToast();
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    message: ''
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const address = "Jl. Contoh No. 123, Kota, Provinsi";
-  const phone = "+6281234567890"; // Format: country code + number without spaces
+  const phone = "+6281234567890";
   const email = "info@umkm.com";
 
   const handleMapClick = () => {
@@ -17,6 +27,45 @@ const Contact = () => {
 
   const handleEmailClick = () => {
     window.location.href = `mailto:${email}`;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch('http://localhost:3000/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to submit form');
+      }
+
+      toast({
+        title: "Sukses!",
+        description: "Pesan Anda telah terkirim. Kami akan menghubungi Anda segera.",
+      });
+
+      setFormData({ name: '', email: '', message: '' });
+    } catch (error) {
+      toast({
+        title: "Error!",
+        description: "Gagal mengirim pesan. Silakan coba lagi nanti.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   return (
@@ -58,7 +107,7 @@ const Contact = () => {
               </div>
             </div>
           </div>
-          <form className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label htmlFor="name" className="block text-sm font-medium mb-1">
                 Nama
@@ -66,7 +115,11 @@ const Contact = () => {
               <input
                 type="text"
                 id="name"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
                 className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/50"
+                required
               />
             </div>
             <div>
@@ -76,7 +129,11 @@ const Contact = () => {
               <input
                 type="email"
                 id="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
                 className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/50"
+                required
               />
             </div>
             <div>
@@ -85,15 +142,20 @@ const Contact = () => {
               </label>
               <textarea
                 id="message"
+                name="message"
+                value={formData.message}
+                onChange={handleChange}
                 rows={4}
                 className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/50"
+                required
               ></textarea>
             </div>
             <button
               type="submit"
-              className="w-full bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary/90 transition-colors"
+              disabled={isSubmitting}
+              className="w-full bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50"
             >
-              Kirim Pesan
+              {isSubmitting ? 'Mengirim...' : 'Kirim Pesan'}
             </button>
           </form>
         </div>

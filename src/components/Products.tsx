@@ -1,50 +1,42 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-const products = [
-  {
-    id: 1,
-    name: "Produk 1",
-    description: "Deskripsi singkat tentang produk 1 dan manfaatnya.",
-    longDescription: "Deskripsi lengkap tentang produk 1. Produk ini memiliki banyak manfaat dan keunggulan. Dibuat dengan bahan berkualitas tinggi dan proses produksi yang terjamin mutunya.",
-    price: "Rp 150.000",
-    image: "https://images.unsplash.com/photo-1721322800607-8c38375eef04",
-    specifications: [
-      "Bahan: Premium",
-      "Ukuran: Standard",
-      "Berat: 250gr"
-    ]
-  },
-  {
-    id: 2,
-    name: "Produk 2",
-    description: "Deskripsi singkat tentang produk 2 dan manfaatnya.",
-    longDescription: "Deskripsi lengkap tentang produk 2. Produk ini memiliki banyak manfaat dan keunggulan. Dibuat dengan bahan berkualitas tinggi dan proses produksi yang terjamin mutunya.",
-    price: "Rp 200.000",
-    image: "https://images.unsplash.com/photo-1649972904349-6e44c42644a7",
-    specifications: [
-      "Bahan: Premium",
-      "Ukuran: Large",
-      "Berat: 300gr"
-    ]
-  },
-  {
-    id: 3,
-    name: "Produk 3",
-    description: "Deskripsi singkat tentang produk 3 dan manfaatnya.",
-    longDescription: "Deskripsi lengkap tentang produk 3. Produk ini memiliki banyak manfaat dan keunggulan. Dibuat dengan bahan berkualitas tinggi dan proses produksi yang terjamin mutunya.",
-    price: "Rp 175.000",
-    image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f",
-    specifications: [
-      "Bahan: Premium",
-      "Ukuran: Medium",
-      "Berat: 200gr"
-    ]
-  },
-];
+interface Product {
+  id: number;
+  name: string;
+  description: string;
+  longDescription: string;
+  price: string;
+  image: string;
+  specifications: string[];
+}
 
 const Products = () => {
-  const [selectedProduct, setSelectedProduct] = useState<typeof products[0] | null>(null);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/api/products');
+        if (!response.ok) {
+          throw new Error('Failed to fetch products');
+        }
+        const data = await response.json();
+        setProducts(data);
+      } catch (err) {
+        setError('Failed to load products. Please try again later.');
+        console.error('Error fetching products:', err);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  if (error) {
+    return <div className="text-center text-red-500 py-12">{error}</div>;
+  }
 
   return (
     <section id="products" className="py-12 md:py-24">
