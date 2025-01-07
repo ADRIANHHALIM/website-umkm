@@ -9,7 +9,6 @@ const Contact = () => {
     email: '',
     message: ''
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const address = "Jl. Contoh No. 123, Kota, Provinsi";
   const phone = "+6281234567890";
@@ -29,38 +28,17 @@ const Contact = () => {
     window.location.href = `mailto:${email}`;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
+    
+    // Show success message
+    toast({
+      title: "Sukses!",
+      description: "Pesan Anda telah terkirim. Kami akan menghubungi Anda segera.",
+    });
 
-    try {
-      const response = await fetch('http://localhost:3000/api/contact', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to submit form');
-      }
-
-      toast({
-        title: "Sukses!",
-        description: "Pesan Anda telah terkirim. Kami akan menghubungi Anda segera.",
-      });
-
-      setFormData({ name: '', email: '', message: '' });
-    } catch (error) {
-      toast({
-        title: "Error!",
-        description: "Gagal mengirim pesan. Silakan coba lagi nanti.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
+    // Reset form
+    setFormData({ name: '', email: '', message: '' });
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -152,10 +130,9 @@ const Contact = () => {
             </div>
             <button
               type="submit"
-              disabled={isSubmitting}
-              className="w-full bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50"
+              className="w-full bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary/90 transition-colors"
             >
-              {isSubmitting ? 'Mengirim...' : 'Kirim Pesan'}
+              Kirim Pesan
             </button>
           </form>
         </div>

@@ -1,5 +1,5 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 interface Product {
   id: number;
@@ -12,31 +12,38 @@ interface Product {
 }
 
 const Products = () => {
-  const [products, setProducts] = useState<Product[]>([]);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await fetch('http://localhost:3000/api/products');
-        if (!response.ok) {
-          throw new Error('Failed to fetch products');
-        }
-        const data = await response.json();
-        setProducts(data);
-      } catch (err) {
-        setError('Failed to load products. Please try again later.');
-        console.error('Error fetching products:', err);
-      }
-    };
-
-    fetchProducts();
-  }, []);
-
-  if (error) {
-    return <div className="text-center text-red-500 py-12">{error}</div>;
-  }
+  // Static product data
+  const products: Product[] = [
+    {
+      id: 1,
+      name: "Produk 1",
+      description: "Deskripsi singkat produk 1",
+      longDescription: "Deskripsi lengkap produk 1 dengan detail spesifikasi dan keunggulan produk.",
+      price: "Rp 100.000",
+      image: "/placeholder.svg",
+      specifications: ["Spesifikasi 1", "Spesifikasi 2", "Spesifikasi 3"]
+    },
+    {
+      id: 2,
+      name: "Produk 2",
+      description: "Deskripsi singkat produk 2",
+      longDescription: "Deskripsi lengkap produk 2 dengan detail spesifikasi dan keunggulan produk.",
+      price: "Rp 150.000",
+      image: "/placeholder.svg",
+      specifications: ["Spesifikasi 1", "Spesifikasi 2", "Spesifikasi 3"]
+    },
+    {
+      id: 3,
+      name: "Produk 3",
+      description: "Deskripsi singkat produk 3",
+      longDescription: "Deskripsi lengkap produk 3 dengan detail spesifikasi dan keunggulan produk.",
+      price: "Rp 200.000",
+      image: "/placeholder.svg",
+      specifications: ["Spesifikasi 1", "Spesifikasi 2", "Spesifikasi 3"]
+    }
+  ];
 
   return (
     <section id="products" className="py-12 md:py-24">
