@@ -16,7 +16,7 @@ const Navbar = () => {
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center h-16">
           <a href="#" className="text-xl font-bold text-primary">
-            UMKM<span className="text-secondary">Name</span>
+            Usaha Mikro Kecil dan Menengah<span className="text-secondary"> QBIT</span>
           </a>
 
           {/* Desktop Menu */}

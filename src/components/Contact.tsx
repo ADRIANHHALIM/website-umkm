@@ -1,4 +1,4 @@
-import { Mail, MapPin, Phone } from 'lucide-react';
+import { FaMapMarkedAlt, FaWhatsapp, FaEnvelope } from 'react-icons/fa'; // Import ikon dari react-icons
 import { useState } from 'react';
 import { useToast } from "@/components/ui/use-toast";
 
@@ -10,9 +10,9 @@ const Contact = () => {
     message: ''
   });
 
-  const address = "Jl. Contoh No. 123, Kota, Provinsi";
-  const phone = "+6281234567890";
-  const email = "info@umkm.com";
+  const address = "Jl. Bani Arsyad, Margasari Kota Tangerang";
+  const phone = "+6281287928805";
+  const email = "adrianhalim05@gmail.com";
 
   const handleMapClick = () => {
     const encodedAddress = encodeURIComponent(address);
@@ -20,7 +20,11 @@ const Contact = () => {
   };
 
   const handleWhatsAppClick = () => {
-    const whatsappUrl = `https://wa.me/${phone.replace(/\+/g, '')}`;
+    const { name, message } = formData;
+    const encodedMessage = encodeURIComponent(
+      `Halo, QBIT ${name}.\n\n${message}\n\nTerima kasih.` // Auto teks yang berada di Whatsapp
+    );
+    const whatsappUrl = `https://wa.me/${phone.replace(/\+/g, '')}?text=${encodedMessage}`;
     window.open(whatsappUrl, '_blank');
   };
 
@@ -30,14 +34,10 @@ const Contact = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Show success message
     toast({
       title: "Sukses!",
       description: "Pesan Anda telah terkirim. Kami akan menghubungi Anda segera.",
     });
-
-    // Reset form
     setFormData({ name: '', email: '', message: '' });
   };
 
@@ -58,7 +58,7 @@ const Contact = () => {
               className="flex items-start gap-4 cursor-pointer hover:text-primary transition-colors"
               onClick={handleMapClick}
             >
-              <MapPin className="text-primary" />
+              <FaMapMarkedAlt className="text-primary text-2xl" />
               <div>
                 <h3 className="font-semibold mb-1">Alamat</h3>
                 <p className="text-secondary">{address}</p>
@@ -68,7 +68,7 @@ const Contact = () => {
               className="flex items-start gap-4 cursor-pointer hover:text-primary transition-colors"
               onClick={handleWhatsAppClick}
             >
-              <Phone className="text-primary" />
+              <FaWhatsapp className="text-primary text-2xl" />
               <div>
                 <h3 className="font-semibold mb-1">WhatsApp</h3>
                 <p className="text-secondary">{phone}</p>
@@ -78,7 +78,7 @@ const Contact = () => {
               className="flex items-start gap-4 cursor-pointer hover:text-primary transition-colors"
               onClick={handleEmailClick}
             >
-              <Mail className="text-primary" />
+              <FaEnvelope className="text-primary text-2xl" />
               <div>
                 <h3 className="font-semibold mb-1">Email</h3>
                 <p className="text-secondary">{email}</p>
