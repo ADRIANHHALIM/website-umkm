@@ -1,6 +1,24 @@
 import { Mail, MapPin, Phone } from 'lucide-react';
 
 const Contact = () => {
+  const address = "Jl. Contoh No. 123, Kota, Provinsi";
+  const phone = "+6281234567890"; // Format: country code + number without spaces
+  const email = "info@umkm.com";
+
+  const handleMapClick = () => {
+    const encodedAddress = encodeURIComponent(address);
+    window.open(`https://www.google.com/maps/search/?api=1&query=${encodedAddress}`, '_blank');
+  };
+
+  const handleWhatsAppClick = () => {
+    const whatsappUrl = `https://wa.me/${phone.replace(/\+/g, '')}`;
+    window.open(whatsappUrl, '_blank');
+  };
+
+  const handleEmailClick = () => {
+    window.location.href = `mailto:${email}`;
+  };
+
   return (
     <section id="contact" className="py-12 md:py-24 bg-muted">
       <div className="container mx-auto px-4">
@@ -9,27 +27,34 @@ const Contact = () => {
         </h2>
         <div className="grid md:grid-cols-2 gap-12 max-w-4xl mx-auto">
           <div className="space-y-8">
-            <div className="flex items-start gap-4">
+            <div 
+              className="flex items-start gap-4 cursor-pointer hover:text-primary transition-colors"
+              onClick={handleMapClick}
+            >
               <MapPin className="text-primary" />
               <div>
                 <h3 className="font-semibold mb-1">Alamat</h3>
-                <p className="text-secondary">
-                  Jl. Contoh No. 123, Kota, Provinsi
-                </p>
+                <p className="text-secondary">{address}</p>
               </div>
             </div>
-            <div className="flex items-start gap-4">
+            <div 
+              className="flex items-start gap-4 cursor-pointer hover:text-primary transition-colors"
+              onClick={handleWhatsAppClick}
+            >
               <Phone className="text-primary" />
               <div>
-                <h3 className="font-semibold mb-1">Telepon</h3>
-                <p className="text-secondary">+62 123 4567 8900</p>
+                <h3 className="font-semibold mb-1">WhatsApp</h3>
+                <p className="text-secondary">{phone}</p>
               </div>
             </div>
-            <div className="flex items-start gap-4">
+            <div 
+              className="flex items-start gap-4 cursor-pointer hover:text-primary transition-colors"
+              onClick={handleEmailClick}
+            >
               <Mail className="text-primary" />
               <div>
                 <h3 className="font-semibold mb-1">Email</h3>
-                <p className="text-secondary">info@umkm.com</p>
+                <p className="text-secondary">{email}</p>
               </div>
             </div>
           </div>
