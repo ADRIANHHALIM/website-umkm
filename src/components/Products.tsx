@@ -1,5 +1,6 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useState } from "react";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa"; // Import modern icons from react-icons
 
 interface Product {
   id: number;
@@ -7,12 +8,13 @@ interface Product {
   description: string;
   longDescription: string;
   price: string;
-  image: string;
+  image: string[]; // Image is an array
   specifications: string[];
 }
 
 const Products = () => {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [currentImageIndex, setCurrentImageIndex] = useState<number>(0); // State for the current image index
 
   // Static product data
   const products: Product[] = [
@@ -22,28 +24,24 @@ const Products = () => {
       description: "Deskripsi singkat produk 1",
       longDescription: "Deskripsi lengkap produk 1 dengan detail spesifikasi dan keunggulan produk.",
       price: "Rp 100.000",
-      image: "/placeholder.svg",
+      image: ["/img/tes1.png", "/img/tes2.png", "/img/tes3.png", "/img/tes4.png", "/img/tes5.png"],
       specifications: ["Spesifikasi 1", "Spesifikasi 2", "Spesifikasi 3"]
     },
-    {
-      id: 2,
-      name: "Produk 2",
-      description: "Deskripsi singkat produk 2",
-      longDescription: "Deskripsi lengkap produk 2 dengan detail spesifikasi dan keunggulan produk.",
-      price: "Rp 150.000",
-      image: "/placeholder.svg",
-      specifications: ["Spesifikasi 1", "Spesifikasi 2", "Spesifikasi 3"]
-    },
-    {
-      id: 3,
-      name: "Produk 3",
-      description: "Deskripsi singkat produk 3",
-      longDescription: "Deskripsi lengkap produk 3 dengan detail spesifikasi dan keunggulan produk.",
-      price: "Rp 200.000",
-      image: "/placeholder.svg",
-      specifications: ["Spesifikasi 1", "Spesifikasi 2", "Spesifikasi 3"]
-    }
   ];
+
+  // Handle next image
+  const nextImage = () => {
+    if (selectedProduct) {
+      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % selectedProduct.image.length);
+    }
+  };
+
+  // Handle previous image
+  const prevImage = () => {
+    if (selectedProduct) {
+      setCurrentImageIndex((prevIndex) => (prevIndex - 1 + selectedProduct.image.length) % selectedProduct.image.length);
+    }
+  };
 
   return (
     <section id="products" className="py-12 md:py-24">
@@ -59,7 +57,7 @@ const Products = () => {
               onClick={() => setSelectedProduct(product)}
             >
               <img
-                src={product.image}
+                src={product.image[0]} // Display only the first image in the product list
                 alt={product.name}
                 className="w-full h-48 object-cover"
               />
@@ -75,29 +73,50 @@ const Products = () => {
 
       <Dialog open={!!selectedProduct} onOpenChange={() => setSelectedProduct(null)}>
         {selectedProduct && (
-          <DialogContent className="max-w-2xl">
+          <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>{selectedProduct.name}</DialogTitle>
             </DialogHeader>
-            <div className="mt-4">
-              <img
-                src={selectedProduct.image}
-                alt={selectedProduct.name}
-                className="w-full h-64 object-cover rounded-lg mb-4"
-              />
-              <p className="text-lg font-semibold text-primary mb-2">
-                {selectedProduct.price}
-              </p>
-              <p className="text-gray-700 mb-4">
-                {selectedProduct.longDescription}
-              </p>
-              <div className="bg-gray-50 p-4 rounded-lg">
-                <h4 className="font-semibold mb-2">Spesifikasi:</h4>
-                <ul className="list-disc list-inside space-y-1">
-                  {selectedProduct.specifications.map((spec, index) => (
-                    <li key={index} className="text-gray-600">{spec}</li>
-                  ))}
-                </ul>
+            <div className="mt-4 flex flex-col items-center">
+              {/* Display the current image */}
+              <div className="relative w-full">
+                <img
+                  src={selectedProduct.image[currentImageIndex]} // Show the image based on the current index
+                  alt={`Image ${currentImageIndex + 1} of ${selectedProduct.name}`}
+                  className="w-full h-64 object-cover rounded-lg"
+                />
+
+                {/* Invisible Navigation buttons with opacity of 70% */}
+                <button
+                  onClick={prevImage}
+                  className="absolute top-1/2 left-0 transform -translate-y-1/2 bg-black text-white p-2 rounded-full opacity-70 hover:opacity-100 transition-opacity"
+                >
+                  <FaChevronLeft size={24} /> {/* Using modern icon */}
+                </button>
+                <button
+                  onClick={nextImage}
+                  className="absolute top-1/2 right-0 transform -translate-y-1/2 bg-black text-white p-2 rounded-full opacity-70 hover:opacity-100 transition-opacity"
+                >
+                  <FaChevronRight size={24} /> {/* Using modern icon */}
+                </button>
+              </div>
+
+              {/* Move text (price, longDescription, specifications) to the left */}
+              <div className="text-left mt-4 w-full">
+                <p className="text-lg font-semibold text-primary mb-2">
+                  {selectedProduct.price}
+                </p>
+                <p className="text-gray-700 mb-4">
+                  {selectedProduct.longDescription}
+                </p>
+                <div className="bg-gray-50 p-4 rounded-lg">
+                  <h4 className="font-semibold mb-2">Spesifikasi:</h4>
+                  <ul className="list-disc list-inside space-y-1">
+                    {selectedProduct.specifications.map((spec, index) => (
+                      <li key={index} className="text-gray-600">{spec}</li>
+                    ))}
+                  </ul>
+                </div>
               </div>
             </div>
           </DialogContent>
