@@ -38,7 +38,7 @@ const Products = () => {
       description: "Minyak Kelapa Murni",
       longDescription: "Bali Pure merupakan minyak kelapa murni yang diproses tanpa menggunakan pemanasan.",
       price: "Rp 33.000 - Rp 135.000",
-      image: ["/img/balipure1.png", "/img/balipure2.png"],
+      image: ["/img/balipure1.png", "/img/balipure2.png", "/img/balipure3.png"],
       specifications: ["EXTRA VIRGIN COCONUT OIL 100%", "Berat: 500ml"],
       shopeeLink: "https://shopee.co.id/balipure",
     },
